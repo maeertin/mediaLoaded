@@ -1,6 +1,6 @@
 {
   "name": "@maeertin/medialoaded",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "author": "Martin Barri <maeertin@gmail.com>",
   "description": "A simple utility for checking whether media is loaded or not.",
