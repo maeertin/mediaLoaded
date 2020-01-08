@@ -1,6 +1,6 @@
 {
   "name": "@maeertin/medialoaded",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "author": "Martin Barri <maeertin@gmail.com>",
   "description": "A simple utility for checking whether media is loaded or not.",
@@ -8,6 +8,7 @@
   "keywords": [
     "images",
     "video",
+    "media",
     "loaded"
   ],
   "repository": {
