@@ -12,7 +12,7 @@
     window.mediaLoaded = factory()
   }
 })(typeof window !== 'undefined' ? window : this, function factory() {
-  function mediaLoaded(el, callback) {
+  function mediaLoaded(el, onComplete) {
     if (!el) {
       console.error(`mediaLoaded: Bad element ${el}`)
     }
@@ -42,6 +42,18 @@
     const total = images.length + videos.length + posters.length
     let progress = 0
 
+    const handleComplete = () => {
+      if (onComplete) {
+        onComplete({ images, videos, posters, total })
+      }
+    }
+
+    // Complete if no media
+    if (total === 0) {
+      handleComplete()
+      return
+    }
+
     const handleMediaLoaded = event => {
       if (event) {
         event.target.removeEventListener(event.type, handleMediaLoaded)
@@ -49,13 +61,14 @@
 
       progress += 1
 
-      if (callback && progress === total) {
-        callback({ images, videos, posters, total })
+      if (progress === total) {
+        handleComplete()
       }
     }
 
     images.concat(posters).forEach(image => {
-      if (!image.complete) {
+      // Check for non-zero, non-undefined naturalWidth
+      if (!image.complete || !image.naturalWidth) {
         image.addEventListener('load', handleMediaLoaded)
       } else {
         handleMediaLoaded()
