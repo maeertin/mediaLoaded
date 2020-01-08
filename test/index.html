@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="../index.js"></script>
+    <title>mediaLoaded</title>
+    <style>
+      body {
+        display: grid;
+        grid-template-columns: 400px 1fr;
+      }
+      img,
+      video {
+        display: block;
+        max-width: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <video
+        src="https://www.w3schools.com/html/mov_bbb.mp4"
+        poster="//source.unsplash.com/1600x900"
+      ></video>
+
+      <picture>
+        <source media="(min-width: 600px)" srcset="//source.unsplash.com/1920x1080" />
+        <source media="(min-width: 0px)" srcset="//source.unsplash.com/960x540" />
+        <img alt="" />
+      </picture>
+
+      <img src="//source.unsplash.com/960x500" alt="" />
+    </div>
+
+    <h3>Status: <span id="output">loading...</span></h3>
+
+    <script>
+      const root = document.getElementById('root')
+      const output = document.getElementById('output')
+
+      const handleLoaded = instance => {
+        console.log('mediaLoaded instance', instance)
+        output.innerHTML = 'loaded'
+      }
+
+      mediaLoaded(root, handleLoaded)
+    </script>
+  </body>
+</html>
