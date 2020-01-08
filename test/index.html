@@ -7,9 +7,11 @@
     <script src="../index.js"></script>
     <title>mediaLoaded</title>
     <style>
-      body {
-        display: grid;
-        grid-template-columns: 400px 1fr;
+      @media (min-width: 400px) {
+        body {
+          display: grid;
+          grid-template-columns: 400px 1fr;
+        }
       }
       img,
       video {
@@ -21,10 +23,15 @@
     </style>
   </head>
   <body>
+    <h3>Status: <span id="output">loading...</span></h3>
+
     <div id="root">
       <video
         src="//www.w3schools.com/html/mov_bbb.mp4"
         poster="//source.unsplash.com/1600x900"
+        playsinline
+        controls
+        muted
       ></video>
 
       <picture>
@@ -36,13 +43,11 @@
       <img src="//source.unsplash.com/960x500" alt="" />
     </div>
 
-    <h3>Status: <span id="output">loading...</span></h3>
-
     <script>
-      const root = document.getElementById('root')
-      const output = document.getElementById('output')
+      var root = document.getElementById('root')
+      var output = document.getElementById('output')
 
-      const handleLoaded = instance => {
+      var handleLoaded = instance => {
         console.log('mediaLoaded instance', instance)
         output.innerHTML = 'loaded'
       }

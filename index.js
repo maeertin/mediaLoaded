@@ -1,17 +1,17 @@
 ;(function(window, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define([], factory)
+    define([], () => factory(window))
   } else if (typeof module === 'object' && module.exports) {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
-    module.exports = factory()
+    module.exports = factory(window)
   } else {
     // Browser globals
-    window.mediaLoaded = factory()
+    window.mediaLoaded = factory(window)
   }
-})(typeof window !== 'undefined' ? window : this, function factory() {
+})(typeof window !== 'undefined' ? window : this, function factory(window) {
   function mediaLoaded(el, onComplete) {
     if (!el) {
       console.error(`mediaLoaded: Bad element ${el}`)
@@ -24,7 +24,7 @@
     }
 
     // Find all videos
-    const videos = Array.from(el.getElementsByTagName('video'))
+    let videos = Array.from(el.getElementsByTagName('video'))
     if (el.tagName === 'VIDEO') {
       videos.unshift(el)
     }
@@ -38,6 +38,13 @@
       }
       return acc
     }, [])
+
+    // Filter out non autoplay videos for touch devices as video events won't
+    // trigger until user interaction.
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+    if (isTouch) {
+      videos = videos.filter(video => video.autoplay)
+    }
 
     const total = images.length + videos.length + posters.length
     let progress = 0
