@@ -14,7 +14,7 @@
 })(typeof window !== 'undefined' ? window : this, function factory(window) {
   function mediaLoaded(el, onComplete) {
     if (!el) {
-      console.error(`mediaLoaded: Bad element ${el}`)
+      console.error('mediaLoaded: Invalid element', el)
     }
 
     // Find all imgs
@@ -48,28 +48,33 @@
 
     const total = images.length + videos.length + posters.length
     let progress = 0
+    let hasBroken = false
 
-    const handleComplete = () => {
+    const complete = () => {
       if (onComplete) {
-        onComplete({ images, videos, posters, total })
+        onComplete({ images, videos, posters, hasBroken, total })
       }
     }
 
     // Complete if no media
     if (total === 0) {
-      handleComplete()
+      complete()
       return
     }
 
     const handleMediaLoaded = event => {
       if (event) {
         event.target.removeEventListener(event.type, handleMediaLoaded)
+
+        if (event.type === 'error') {
+          hasBroken = true
+        }
       }
 
       progress += 1
 
       if (progress === total) {
-        handleComplete()
+        complete()
       }
     }
 
@@ -77,6 +82,7 @@
       // Check for non-zero, non-undefined naturalWidth
       if (!image.complete || !image.naturalWidth) {
         image.addEventListener('load', handleMediaLoaded)
+        image.addEventListener('error', handleMediaLoaded)
       } else {
         handleMediaLoaded()
       }
@@ -85,6 +91,7 @@
     videos.forEach(video => {
       if (video.readyState < 2) {
         video.addEventListener('loadeddata', handleMediaLoaded)
+        video.addEventListener('error', handleMediaLoaded)
       } else {
         handleMediaLoaded()
       }
