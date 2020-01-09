@@ -3,7 +3,7 @@
   "version": "0.0.3",
   "private": false,
   "author": "Martin Barri <maeertin@gmail.com>",
-  "description": "A simple utility for checking whether media is loaded or not.",
+  "description": "A simple utility for checking whether images and/or videos have been loaded.",
   "main": "index.js",
   "keywords": [
     "images",
