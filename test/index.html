@@ -7,54 +7,92 @@
     <script src="../index.js"></script>
     <title>mediaLoaded</title>
     <style>
-      @media (min-width: 400px) {
-        body {
-          display: grid;
-          grid-template-columns: 400px 1fr;
-        }
-      }
-      img,
-      video {
+      video,
+      img {
         display: block;
         max-width: 100%;
         width: 100%;
         object-fit: cover;
       }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+      .aspectRatio {
+        position: relative;
+      }
+      .aspectRatio::before {
+        content: '';
+        display: block;
+        padding-bottom: calc(9 / 16 * 100%);
+      }
+      .aspectRatio > * {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
     </style>
   </head>
   <body>
-    <h3>Status: <span id="output">loading...</span></h3>
-
     <div id="root">
-      <video
-        src="//www.w3schools.com/html/mov_bbb.mp4"
-        poster="//source.unsplash.com/1600x900"
-        playsinline
-        controls
-        muted
-      ></video>
+      <div class="grid">
+        <div class="aspectRatio">
+          <video
+            src="//www.w3schools.com/html/mov_bbb.mp4"
+            poster="//source.unsplash.com/1600x900"
+            playsinline
+            controls
+            muted
+          ></video>
+        </div>
 
-      <picture>
-        <source media="(min-width: 600px)" srcset="//source.unsplash.com/1920x1080" />
-        <source media="(min-width: 0px)" srcset="//source.unsplash.com/960x540" />
-        <img alt="" />
-      </picture>
+        <div class="aspectRatio">
+          <picture>
+            <source media="(min-width: 600px)" srcset="//source.unsplash.com/1920x1080" />
+            <source media="(min-width: 0px)" srcset="//source.unsplash.com/960x540" />
+            <img alt="" />
+          </picture>
+        </div>
 
-      <img src="//source.unsplash.com/960x500" alt="" />
+        <div class="aspectRatio">
+          <img src="//source.unsplash.com/1500x850" alt="" />
+        </div>
 
-      <img src="//faulty.url.test" alt="" />
+        <div class="aspectRatio">
+          <img class="preload" src="//source.unsplash.com/960x500" alt="" />
+        </div>
+
+        <div class="aspectRatio preload">
+          <img src="//source.unsplash.com/960x510" alt="" />
+        </div>
+
+        <div class="aspectRatio">
+          <img src="//faulty.url.test" alt="" />
+        </div>
+      </div>
+
+      <h3>".preload" status: <span id="output1">loading...</span></h3>
+      <h3>All media status: <span id="output2">loading...</span></h3>
     </div>
 
     <script>
-      var root = document.getElementById('root')
-      var output = document.getElementById('output')
+      // Single node as target argument
+      var node = document.getElementById('root')
+      var output2 = document.getElementById('output2')
+      mediaLoaded(node, instance => {
+        console.log('#root mediaLoaded instance', instance)
+        output2.innerHTML = 'loaded'
+      })
 
-      var handleLoaded = instance => {
-        console.log('mediaLoaded instance', instance)
-        output.innerHTML = 'loaded'
-      }
-
-      mediaLoaded(root, handleLoaded)
+      // nodeList as target argument
+      var nodeList = document.querySelectorAll('.preload')
+      var output1 = document.getElementById('output1')
+      mediaLoaded(nodeList, instance => {
+        console.log('.preload mediaLoaded instance', instance)
+        output1.innerHTML = 'loaded'
+      })
     </script>
   </body>
 </html>

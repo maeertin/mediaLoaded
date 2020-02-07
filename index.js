@@ -12,54 +12,72 @@
     window.mediaLoaded = factory(window)
   }
 })(typeof window !== 'undefined' ? window : this, function factory(window) {
+  function makeArray(value) {
+    if (Array.isArray(value)) {
+      return value
+    }
+
+    const isArrayLike = typeof value === 'object' && typeof value.length === 'number'
+    if (isArrayLike) {
+      return Array.prototype.slice.call(value)
+    }
+
+    return [value]
+  }
+
   function mediaLoaded(el, onComplete) {
-    if (!el) {
+    let elements = el
+    if (typeof el === 'string') {
+      elements = document.querySelectorAll(el)
+    }
+
+    if (!elements) {
       console.error('mediaLoaded: Invalid element', el)
+      return
     }
 
-    // Find all imgs
-    const images = Array.from(el.getElementsByTagName('img'))
-    if (el.tagName === 'IMG') {
-      images.unshift(el)
-    }
+    elements = makeArray(elements)
 
-    // Find all videos
-    let videos = Array.from(el.getElementsByTagName('video'))
-    if (el.tagName === 'VIDEO') {
-      videos.unshift(el)
-    }
+    let images = []
+    let videos = []
+    const posters = []
+
+    // Find all videos & images
+    elements.forEach(element => {
+      if (element.tagName === 'IMG') {
+        images.unshift(element)
+      } else if (element.tagName === 'VIDEO') {
+        videos.unshift(element)
+      } else {
+        images = images.concat(makeArray(element.getElementsByTagName('img')))
+        videos = videos.concat(makeArray(element.getElementsByTagName('video')))
+      }
+    })
 
     // Find all posters
-    const posters = videos.reduce((acc, video) => {
+    videos.forEach(video => {
       if (video.poster) {
         const poster = new Image()
         poster.src = video.poster
-        acc.push(poster)
+        posters.push(poster)
       }
-      return acc
-    }, [])
+    })
 
-    // Filter out non autoplay videos for touch devices as video events won't
-    // trigger until user interaction.
+    // With all posters found, filter out non autoplay videos for touch devices
+    // as video events won't trigger until user interaction.
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
     if (isTouch) {
       videos = videos.filter(video => video.autoplay)
     }
 
     const total = images.length + videos.length + posters.length
-    let progress = 0
     let hasBroken = false
+    let count = 0
 
     const complete = () => {
       if (onComplete) {
         onComplete({ images, videos, posters, hasBroken, total })
       }
-    }
-
-    // Complete if no media
-    if (total === 0) {
-      complete()
-      return
     }
 
     const handleMediaLoaded = event => {
@@ -71,11 +89,17 @@
         }
       }
 
-      progress += 1
+      count += 1
 
-      if (progress === total) {
+      if (total === count) {
         complete()
       }
+    }
+
+    // Complete if no media found.
+    if (total === 0) {
+      complete()
+      return
     }
 
     images.concat(posters).forEach(image => {
