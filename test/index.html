@@ -52,7 +52,7 @@
           <picture>
             <source media="(min-width: 600px)" srcset="//source.unsplash.com/1920x1080" />
             <source media="(min-width: 0px)" srcset="//source.unsplash.com/960x540" />
-            <img alt="" />
+            <img src="//source.unsplash.com/1920x1080" alt="" />
           </picture>
         </div>
 
@@ -81,7 +81,7 @@
       // Single node as target argument
       var node = document.getElementById('root')
       var output2 = document.getElementById('output2')
-      mediaLoaded(node, instance => {
+      window.mediaLoaded(node, function (instance) {
         console.log('#root mediaLoaded instance', instance)
         output2.innerHTML = 'loaded'
       })
@@ -89,7 +89,7 @@
       // nodeList as target argument
       var nodeList = document.querySelectorAll('.preload')
       var output1 = document.getElementById('output1')
-      mediaLoaded(nodeList, instance => {
+      window.mediaLoaded(nodeList, function (instance) {
         console.log('.preload mediaLoaded instance', instance)
         output1.innerHTML = 'loaded'
       })

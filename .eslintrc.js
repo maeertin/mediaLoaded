@@ -23,6 +23,9 @@ module.exports = {
     'func-names': 'off',
     'linebreak-style': 'off', // Doesn't play nicely with Windows
     'no-alert': 'error',
+    'no-var': 'off',
+    'object-shorthand': 'off',
+    'vars-on-top': 'off',
     // Strict, airbnb is using warn; allow warn and error for dev environments
     'no-console': ['error', { allow: ['warn', 'error'] }],
     'no-constant-condition': 'error',
@@ -30,7 +33,7 @@ module.exports = {
     'no-param-reassign': 'off',
     'no-prototype-builtins': 'off',
     'no-prototype-builtins': 'off',
-    'prefer-arrow-callback': ['error', { allowNamedFunctions: true }],
+    'prefer-arrow-callback': 'off',
     'prefer-destructuring': 'off', // Destructuring harm grep potential.
   },
 }

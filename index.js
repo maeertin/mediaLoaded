@@ -1,7 +1,9 @@
-;(function(window, factory) {
+;(function (window, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define([], () => factory(window))
+    define([], function () {
+      factory(window)
+    })
   } else if (typeof module === 'object' && module.exports) {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
@@ -17,7 +19,7 @@
       return value
     }
 
-    const isArrayLike = typeof value === 'object' && typeof value.length === 'number'
+    var isArrayLike = typeof value === 'object' && typeof value.length === 'number'
     if (isArrayLike) {
       return Array.prototype.slice.call(value)
     }
@@ -26,7 +28,7 @@
   }
 
   function mediaLoaded(el, onComplete) {
-    let elements = el
+    var elements = el
     if (typeof el === 'string') {
       elements = document.querySelectorAll(el)
     }
@@ -38,12 +40,12 @@
 
     elements = makeArray(elements)
 
-    let images = []
-    let videos = []
-    const posters = []
+    var images = []
+    var videos = []
+    var posters = []
 
     // Find all videos & images
-    elements.forEach(element => {
+    elements.forEach(function (element) {
       if (element.tagName === 'IMG') {
         images.unshift(element)
       } else if (element.tagName === 'VIDEO') {
@@ -55,9 +57,9 @@
     })
 
     // Find all posters
-    videos.forEach(video => {
+    videos.forEach(function (video) {
       if (video.poster) {
-        const poster = new Image()
+        var poster = new Image()
         poster.src = video.poster
         posters.push(poster)
       }
@@ -65,22 +67,30 @@
 
     // With all posters found, filter out non autoplay videos for touch devices
     // as video events won't trigger until user interaction.
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+    var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
     if (isTouch) {
-      videos = videos.filter(video => video.autoplay)
+      videos = videos.filter(function (video) {
+        return video.autoplay
+      })
     }
 
-    const total = images.length + videos.length + posters.length
-    let hasBroken = false
-    let count = 0
+    var total = images.length + videos.length + posters.length
+    var hasBroken = false
+    var count = 0
 
-    const complete = () => {
+    function complete() {
       if (onComplete) {
-        onComplete({ images, videos, posters, hasBroken, total })
+        onComplete({
+          images: images,
+          videos: videos,
+          posters: posters,
+          hasBroken: hasBroken,
+          total: total,
+        })
       }
     }
 
-    const handleMediaLoaded = event => {
+    function handleMediaLoaded(event) {
       if (event) {
         event.target.removeEventListener(event.type, handleMediaLoaded)
 
@@ -102,7 +112,7 @@
       return
     }
 
-    images.concat(posters).forEach(image => {
+    images.concat(posters).forEach(function (image) {
       // Check for non-zero, non-undefined naturalWidth
       if (!image.complete || !image.naturalWidth) {
         image.addEventListener('load', handleMediaLoaded)
@@ -112,7 +122,7 @@
       }
     })
 
-    videos.forEach(video => {
+    videos.forEach(function (video) {
       if (video.readyState < 2) {
         video.addEventListener('loadeddata', handleMediaLoaded)
         video.addEventListener('error', handleMediaLoaded)
