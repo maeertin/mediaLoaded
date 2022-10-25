@@ -1,5 +1,10 @@
 ### Versions
 
+## 2.0.0
+###### *2022-10-25*
+- Migrate to typescript
+- Add rollup for bundling
+
 ## 1.2.1
 ###### *2020-05-15*
 - Fix faulty factory

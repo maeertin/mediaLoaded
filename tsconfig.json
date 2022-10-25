@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es5",
+    "lib": ["es2020", "dom"],
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "declaration": true,
+    "esModuleInterop": true,
+    "outDir": "build/es",
+    "sourceMap": true,
+    "strict": true
+  },
+  "include": ["src/**/*.ts*"],
+  "exclude": ["**/.*/", "**/build", "**/node_modules"]
+}

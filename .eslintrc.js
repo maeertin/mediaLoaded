@@ -1,18 +1,22 @@
 module.exports = {
   root: true, // So parent files don't get applied
   env: {
-    amd: true,
     browser: true,
     es6: true,
     node: true,
   },
-  extends: ['airbnb-base', 'prettier'],
-  parser: 'babel-eslint',
+  extends: [
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+    'airbnb-base',
+    'airbnb-typescript/base',
+    'prettier',
+  ],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 7,
-    sourceType: 'module',
   },
-  plugins: ['babel'],
+  plugins: ['@typescript-eslint/eslint-plugin'],
   /**
    * Sorted alphanumerically within each group. built-in and each plugin form
    * their own groups.
@@ -23,8 +27,6 @@ module.exports = {
     'func-names': 'off',
     'linebreak-style': 'off', // Doesn't play nicely with Windows
     'no-alert': 'error',
-    'no-var': 'off',
-    'object-shorthand': 'off',
     'vars-on-top': 'off',
     // Strict, airbnb is using warn; allow warn and error for dev environments
     'no-console': ['error', { allow: ['warn', 'error'] }],
@@ -32,8 +34,19 @@ module.exports = {
     // Airbnb use error
     'no-param-reassign': 'off',
     'no-prototype-builtins': 'off',
-    'no-prototype-builtins': 'off',
-    'prefer-arrow-callback': 'off',
     'prefer-destructuring': 'off', // Destructuring harm grep potential.
+
+    // disabled type-aware linting due to performance considerations
+    '@typescript-eslint/dot-notation': 'off',
+    'dot-notation': 'error',
+    // disabled type-aware linting due to performance considerations
+    '@typescript-eslint/no-implied-eval': 'off',
+    'no-implied-eval': 'error',
+    // disabled type-aware linting due to performance considerations
+    '@typescript-eslint/no-throw-literal': 'off',
+    'no-throw-literal': 'error',
+    // disabled type-aware linting due to performance considerations
+    '@typescript-eslint/return-await': 'off',
+    'no-return-await': 'error',
   },
 }
